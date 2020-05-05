@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<typeAlias type="global.sesoc.color.vo.Cart" alias="Cart"/>
+		<typeAlias type="global.sesoc.color.vo.Customer" alias="Customer"/>
+		<typeAlias type="global.sesoc.color.vo.Productinfo" alias="Productinfo"/>
+		<typeAlias type="global.sesoc.color.vo.Reply" alias="Reply"/>
+		<typeAlias type="global.sesoc.color.vo.Review" alias="Review"/>
+		<typeAlias type="global.sesoc.color.vo.Skinphoto" alias="Skinphoto"/>
+		<typeAlias type="global.sesoc.color.vo.CrawlReview" alias="CrawlReview"/>
+		<typeAlias type="global.sesoc.color.vo.Checkbox" alias="Checkbox"/>
+		<typeAlias type="global.sesoc.color.vo.ingredientlist" alias="ingredientlist"/>
+		<typeAlias type="global.sesoc.color.vo.Admin" alias="Admin"/>
+		<typeAlias type="global.sesoc.color.vo.CartRecord" alias="CartRecord"/>
+		<typeAlias type="global.sesoc.color.vo.Orderlist" alias="Orderlist"/>
+		<typeAlias type="global.sesoc.color.vo.EmailForm" alias="EmailForm"/>
+	</typeAliases>
+	<mappers>
+		<mapper resource="mapper/customerMapper.xml" />
+		<mapper resource="mapper/reviewMapper.xml" />
+		<mapper resource="mapper/crawlreviewMapper.xml" />
+		<mapper resource="mapper/productMapper.xml" />
+		<mapper resource="mapper/replyMapper.xml" />
+		<mapper resource="mapper/cartMapper.xml" />
+		<mapper resource="mapper/ingredientMapper.xml" />
+		<mapper resource="mapper/adminMapper.xml" />
+		<mapper resource="mapper/cartRecordMapper.xml" />
+		<mapper resource="mapper/skinphotoMapper.xml" />
+	</mappers>
+</configuration>

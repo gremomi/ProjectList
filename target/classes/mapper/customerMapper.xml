@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="global.sesoc.color.dao.CustomerMapper">
+
+<!-- 회원가입 -->
+
+<insert id="signup" parameterType="Customer">
+	insert into 
+		customer
+        (
+            custno
+            , custid
+            , custpwd
+            , custname
+            , custgender
+            , custemail
+            , custage
+            , custphone
+            , custaddress
+            , skintype
+            <if test="orderid != null">
+            , orderid
+            </if>
+        )
+	values (
+		SEQ_CUSTOMER_CUSTNO.nextval
+		, #{custid}
+		, #{custpwd}
+		, #{custname}
+		, #{custgender}
+		, #{custemail}
+		, #{custage}
+		, #{custphone}
+		, #{custaddress}
+		, #{skintype}
+		<if test="orderid != null">
+		, #{orderid}
+		</if>
+	)
+</insert>
+
+<!-- 로그인 / 중복체크는 나중에 -->
+
+<select id="selectOne" parameterType="Customer" resultType="Customer">
+	select
+		*
+	from
+		customer
+	where
+		custid = #{custid}
+	<if test="custpwd != null">
+	and
+		custpwd = #{custpwd}
+	</if>
+</select>
+
+<!-- custno 로 정보찾기 -->
+
+<select id="customerinfo" parameterType="int" resultType="Customer">
+	select
+		*
+	from
+		customer
+	where
+		custno = #{custno}
+</select>
+
+<!-- 회원 정보 수정 -->
+<update id="modifyCustomer" parameterType="Customer">
+	update
+		customer
+	set
+		custpwd = #{custpwd}
+		, custname = #{custname}
+		, custgender = #{custgender}
+		, custemail = #{custemail}
+		, custage = #{custage}
+		, custphone = #{custphone}
+		, custaddress = #{custaddress}
+	where
+		custid = #{custid}
+</update>
+
+<!-- 회원 탈퇴 -->
+<delete id="deleteCustomer" parameterType="String">
+	delete from
+		customer
+	where
+		custid = #{custid}
+</delete>
+<select id="Allcust" parameterType="map" resultType="Customer">
+	select
+		*
+	from
+		customer
+	where 
+	<choose>
+		<when test="searchItem == 'custid'">custid</when>
+		<when test="searchItem == 'custname'">custname</when>
+		<when test="searchItem == 'custemail'">custemail</when>
+		<when test="searchItem == 'custphone'">custphone</when>
+	</choose> 
+	like '%' || #{searchWord} || '%'
+</select>
+<select id="getCustomerCount" resultType="int">
+select
+	count(*)
+from
+	customer
+where 
+	<choose>
+		<when test="searchItem == 'custid'">custid</when>
+		<when test="searchItem == 'custname'">custname</when>
+		<when test="searchItem == 'custemail'">custemail</when>
+		<when test="searchItem == 'custphone'">custphone</when>
+	</choose> 
+	like '%' || #{searchWord} || '%'
+</select>
+<!-- 이메일 인증 -->
+<update id="keyalter" parameterType="String">
+
+	update
+		customer
+	set
+		custkey = 'Y'
+	where
+		custid = #{custid}
+</update>
+<!-- 아이디 찾기 -->
+<select id="idFind" parameterType="Customer" resultType="Customer">
+	select
+		*
+	from
+		customer
+	where
+		custemail = #{custemail}
+</select>
+
+<!-- 비밀번호 찾기 -->
+<select id="pwdFind" parameterType="Customer" resultType="Customer">
+	select
+		*
+	from
+		customer
+	where
+		custemail = #{custemail}
+	and
+		custid = #{custid}
+</select>
+</mapper>

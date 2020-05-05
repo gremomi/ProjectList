@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="global.sesoc.color.dao.ReviewMapper">
+
+<!-- 글 한 개 저장 -->
+<insert id="insertReview" parameterType="Review">
+	insert into review(
+	reviewno, 
+	writer, 
+	content, 
+	reviewgrade, 
+	age, 
+	gender, 
+	skintype, 
+	profilephoto, 
+	productno 
+	<if test="originalfile != null">
+		, originalfile
+		, savedfile 
+	</if>
+)
+values(
+	SEQ_REVIEW_REVIEWNO.nextval, 
+	#{writer}, 
+	#{content}, 
+	#{reviewgrade}, 
+	#{age}, 
+	#{gender}, 
+	#{skintype}, 
+	#{profilephoto}, 
+	#{productno} 
+	<if test="originalfile != null">
+	, #{originalfile}
+	, #{savedfile} 
+	</if>
+) 	
+</insert>
+
+<select id="selectAll" resultType="Review" parameterType="map">
+
+select
+	*
+from
+	(
+		select
+			*
+		from
+			review
+		where
+			content like '%'||#{searchWord}||'%'
+			and
+			productno = #{productno}
+	)
+where
+	content like '%'||#{searchWord}||'%'
+	<if test='male == "false"'>
+		and gender not like 'male'
+	</if>
+	<if test='female == "false"'>
+		and gender not like 'female'
+	</if>
+	<if test='a0s == "false"'>
+		and age not like '0s'
+	</if>
+	<if test='a10s == "false"'>
+		and age not like '10s'
+	</if>
+	<if test='a20s == "false"'>
+		and age not like '20s'
+	</if>
+	<if test='a30s == "false"'>
+		and age not like '30s'
+	</if>
+	<if test='a40s == "false"'>
+		and age not like '40s'
+	</if>
+	<if test='a50s == "false"'>
+		and age not like '50s'
+	</if>
+	<if test='a60s == "false"'>
+		and age not like '60s'
+	</if>
+	<if test='dry == "false"'>
+		and skintype not like 'dry'
+	</if>
+	<if test='oily == "false"'>
+		and skintype not like 'oily'
+	</if>
+	<if test='normal == "false"'>
+		and skintype not like 'normal'
+	</if>
+	<if test='combination == "false"'>
+		and skintype not like 'combination'
+	</if>
+	<if test='sensitive == "false"'>
+		and skintype not like 'sensitive'
+	</if>
+order by
+	reviewno desc
+
+</select>
+
+<select id="reviewDetail" parameterType="int" resultType="Review">
+
+select
+	*
+from
+	review
+where
+	reviewno = #{reviewno}
+</select>
+
+<select id="getCountReview" parameterType="int" resultType="int">
+select
+	count(*)
+from
+	review
+where
+	productno =#{productno}
+</select>
+
+<select id="addGrade" parameterType="int" resultType="int">
+select
+	sum(reviewgrade)
+from
+	review
+where
+	productno = #{productno}
+</select>
+
+<select id="getMyAction" parameterType="String" resultType="Review">
+select
+	*
+from
+	review
+where
+	writer =#{writer}
+</select>
+<delete id="reviewDelete" parameterType="int">
+
+delete from
+	review
+where
+	reviewno = #{reviewno}
+</delete>
+
+<update id="reviewUpdate" parameterType="Review">
+
+update
+	review
+set
+	content = #{content}
+	, reviewgrade = #{reviewgrade}
+	, profilephoto = #{profilephoto}
+<if test="originalfile != null">
+	, originalfile = #{originalfile}
+	, savedfile = #{savedfile}
+</if>
+where
+	reviewno = #{reviewno}
+
+</update>
+
+</mapper>

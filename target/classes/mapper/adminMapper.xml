@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="global.sesoc.color.dao.AdminMapper">
+<insert id="adminInsert" parameterType="Admin">
+insert into 
+	t_admin
+	(
+		admin_id,
+		admin_pw,
+		admin_name,
+		admin_email
+	)
+	values (
+		#{admin_id}
+		,#{admin_pw}
+		,#{admin_name}
+		,#{admin_email}
+	)
+</insert>
+<select id="selectAdmin" parameterType="Admin" resultType="Admin">
+select
+	*
+from
+	t_admin
+where
+	admin_id = #{admin_id}
+	<if test="admin_pw != null">
+	and admin_pw = #{admin_pw}
+	</if>
+</select>
+</mapper>

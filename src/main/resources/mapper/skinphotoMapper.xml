@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="global.sesoc.color.dao.SkinphotoMapper">
+
+<!-- 잘라낸사진 저장(색분석 전) -->
+<insert id="insertP" parameterType="Skinphoto">
+insert into skinphoto
+(photono, originalphoto, savedphoto, savedate, custno)
+values(SEQ_SKINPHOTO_PHOTONO.nextval, #{originalphoto}, #{savedphoto}, default, #{custno})
+</insert>
+
+<!-- 색분석 후 나온색 저장 -->
+<update id="insertC" parameterType="map">
+update skinphoto
+	set skincolor = #{skincolor}
+	where custno = #{custno}
+	and photono=(select MAX(photono) from skinphoto where custno=#{custno})
+</update>
+
+<!-- 추천 립 -->
+<select id="suisenL" parameterType="String" resultType="Productinfo">
+select * from productinfo
+where cate like '%립%'
+and  color like '%'||#{skintype}||'%'
+</select>
+
+<!-- 추천 블러셔 -->
+<select id="suisenB" parameterType="String" resultType="Productinfo">
+select * from productinfo
+where cate like '%블러셔%'
+and  color like '%'||#{skintype}||'%'
+</select>
+
+<!-- 추천 섀도우 -->
+<select id="suisenS" parameterType="String" resultType="Productinfo">
+select * from productinfo
+where cate like '%아이섀도우%'
+and  color like '%'||#{skintype}||'%'
+</select>
+<!-- 추천템 모두 -->
+<select id="suisenAll" parameterType="String" resultType="Productinfo">
+select * from productinfo
+where 
+color like '%'||#{skintype}||'%'
+</select>
+<!-- //회원 번호로 가장 최근 타입 알지비 색상 가져오기 -->
+<select id="getC" parameterType="int" resultType="String">
+select skincolor from SKINPHOTO
+where custno=#{custno}
+and photono in(select max(photono) from skinphoto where custno =#{custno})
+</select>
+</mapper>

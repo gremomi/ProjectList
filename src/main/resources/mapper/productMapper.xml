@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="global.sesoc.color.dao.ProductMapper">
+<select id="product" resultType="Productinfo" parameterType="map">
+select
+	*
+from
+	productinfo
+where
+	productname like '%'||#{searchWord}||'%'
+	<choose>
+		<when test="cate == 'lip'">and cate like '%'||'립'||'%' </when>
+		<when test="cate == 'blusher'">and cate like '%'||'블러셔'||'%' </when>
+		<when test="cate == 'liner'">and cate like '%'||'아이라이너'||'%' </when>
+		<when test="cate == 'shadow'">and cate like '%'||'아이섀도우'||'%' </when>
+	</choose>
+	<choose>
+		<when test="cate == 'spring'">and color like '%'||'봄'||'%' </when>
+		<when test="cate == 'summer'">and color like '%'||'여름'||'%' </when>
+		<when test="cate == 'fall'">and color like '%'||'가을'||'%' </when>
+		<when test="cate == 'winter'">and color like '%'||'겨울'||'%' </when>
+	</choose>
+</select>
+
+<select id="selectAll2" parameterType="map" resultType="Productinfo">
+	select
+			*
+		from
+			productinfo
+		where
+			<choose>
+				<when test="searchItem == 'productname'">productname</when>
+				<when test="searchItem == 'cate'">cate</when>
+				<when test="searchItem == 'color'">color</when>
+			</choose>
+			like '%' || #{searchWord} || '%'
+		order by
+			productno desc
+</select>
+
+<!-- <select id="getProductCount" parameterType="map" resultType="int"> -->
+<!-- 	select -->
+<!-- 		count(*) -->
+<!-- 	from -->
+<!-- 		productinfo -->
+<!-- 	where -->
+<!-- 		productname like '%'||#{searchWord}||'%' -->
+<!-- 	<choose> -->
+<!-- 		<when test="cate == 'lip'">and cate like '%'||'립'||'%' </when> -->
+<!-- 		<when test="cate == 'blusher'">and cate like '%'||'블러셔'||'%' </when> -->
+<!-- 		<when test="cate == 'liner'">and cate like '%'||'아이라이너'||'%' </when> -->
+<!-- 		<when test="cate == 'shadow'">and cate like '%'||'아이섀도우'||'%' </when> -->
+<!-- 	</choose> -->
+<!-- 	<choose> -->
+<!-- 		<when test="cate == 'spring'">and color like '%'||'봄'||'%' </when> -->
+<!-- 		<when test="cate == 'summer'">and color like '%'||'여름'||'%' </when> -->
+<!-- 		<when test="cate == 'fall'">and color like '%'||'가을'||'%' </when> -->
+<!-- 		<when test="cate == 'winter'">and color like '%'||'겨울'||'%' </when> -->
+<!-- 	</choose> -->
+<!-- </select> -->
+
+<select id="getCount" parameterType="map" resultType="int">
+	select
+		count(*)
+	from
+		productinfo
+	where
+			<choose>
+				<when test="searchItem == 'productname'">productname</when>
+				<when test="searchItem == 'cate'">cate</when>
+				<when test="searchItem == 'color'">color</when>
+			</choose>
+			like '%' || #{searchWord} || '%'
+		order by
+			productno desc
+</select>
+<select id="getDetail" parameterType="int" resultType="Productinfo">
+select
+	*
+from
+	productinfo
+where
+	productno = #{productno}
+</select>
+<select id="category" parameterType="String" resultType="Productinfo">
+select
+	*
+from
+	productinfo
+where
+	cate like '%' || #{cate} || '%'
+order by
+	productno
+</select>
+<select id="betweenPrice" parameterType="map" resultType="Productinfo">
+select
+	*
+from
+	productinfo
+where
+	price between #{min} and #{max} 
+</select>
+<select id="getColor" parameterType="String" resultType="Productinfo">
+select
+	*
+from
+	productinfo
+where
+	color like '%' || #{color} || '%'
+</select>
+<delete id="deleteproduct" parameterType="int">
+delete
+	productinfo
+where
+	productno = #{productno}
+</delete>
+<update id="updateproduct" parameterType="Productinfo">
+update
+	Productinfo
+set
+	productname = #{productname},
+	productimg = #{productimg},
+	productvolume = #{productvolume},
+	price = #{price},
+	expr = #{expr},
+	ingredient = #{ingredient},
+	color = #{color},
+	cate = #{cate},
+	grade = #{grade}
+where
+	productno = #{productno}
+</update>
+<insert id="insertProduct" parameterType="Productinfo">
+insert into productinfo(
+	productno,
+	productname,
+	productimg,
+	productvolume,
+	price,
+	expr,
+	ingredient,
+	color,
+	cate,
+	grade
+)
+values(
+	seq_productinfo_productno.nextval,
+	#{productname},
+	#{productimg},
+	#{productvolume},
+	#{price},
+	#{expr},
+	#{ingredient},
+	#{color},
+	#{cate},
+	#{grade}
+)
+</insert>
+
+<!-- 지하씨거 시작-->
+<!-- //평점높은 6개 가져오기 -->
+<select id="getSix" resultType="Productinfo">
+<![CDATA[
+select * from productinfo
+where ROWNUM <=6
+order by GRADE desc
+]]>
+</select>
+
+<!-- 전체 제품 수 조회 -->
+<select id="getProductCount" parameterType="map" resultType="int">
+	select count(*) from productinfo
+	where price between #{min} and #{max}
+	and
+	<choose>
+<when test="searchItem == 'productname'"> 
+ 	productname 
+    	</when>
+    	<when test="searchItem == 'cate'">
+    	cate
+    	</when>
+    	<when test="searchItem == 'color'">
+    	color 
+    	</when>
+    </choose>
+    like '%'||#{searchWord}||'%'
+   and productname like '%'||#{doubleSearch}||'%'
+    order by PRODUCTNO desc
+</select>
+
+<!-- 전체제품 조회 RowBounds 이용 -->
+<select id="selectAll" resultType="Productinfo" parameterType="map">
+ select * from productinfo 
+	    where price between #{min} and #{max}
+	    and
+	    <choose>
+	    	<when test="searchItem == 'productname'">
+	    	productname 
+	    	</when>
+	    	<when test="searchItem == 'cate'">
+	    	cate
+	    	</when>
+	    	<when test="searchItem == 'color'">
+	    	color 
+	    	</when>
+	    </choose>
+	    like '%'||#{searchWord}||'%'
+	   and productname like '%'||#{doubleSearch}||'%'
+	    order by PRODUCTNO desc
+</select>
+
+<select id="makeupList" parameterType="map" resultType="productinfo">
+
+select
+	*
+from
+	productinfo
+where
+
+<if test="lip != null">
+	productno  = #{lip}
+</if>
+<if test="blush != null">
+	or productno = #{blush}
+</if>
+<if test="shadow != null">
+	or productno = #{shadow}
+</if>
+<if test="liner != null">
+	or productno = #{liner}
+</if>
+	 
+
+</select>
+</mapper>

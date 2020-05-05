@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="global.sesoc.color.dao.CrawlReviewMapper">
+<select id="selectreview" resultType="CrawlReview" parameterType="int">
+select
+	*
+from
+	crawlreview
+where
+	productno = #{productno}
+order by grade desc
+</select>
+<select id="orderedreview" parameterType="map" resultType="CrawlReview">
+select
+	*
+from
+	crawlreview
+where
+	grade = #{grade}
+	and
+	productno = #{productno}
+</select>
+</mapper>
